@@ -1,30 +1,35 @@
 <template>
   <div class="calculator">
     <h1>{{ msg }}</h1>
-    <div>{{test ? "Введите первое число" : "Введите второе число число"}}</div>
+    <div>{{ checked == "operand1" ? "Введите первое число" : "Введите второе число число" }}</div>
+    
+    <input type="radio" name="operands_choise" value="operand1" v-model="checked">
+    <input type="radio" name="operands_choise" value="operand2" v-model="checked">
+    
     <input 
       type="text" 
-      v-model.number="operand1.value" 
-      v-on:click="activeCheckbox" 
-      value="">
+      v-model.number="operand1.value">
     <input 
       type="text" 
-      v-model.number="operand2.value"
-      v-on:click="activeCheckbox">
-    <h2 v-bind:class="{'error' : error}">{{ error ? "ERROR" : result }}</h2>
+      v-model.number="operand2.value">
+    
+    <h2 v-bind:class="{'error' : error}">{{ errorHandler }}</h2>
+
     <input 
       type="checkbox" 
       id="operands_show"
       v-model="isHidden">
     <label for="operands_show">Показать клавиатуру</label>
+
     <div class="operands" v-show="isHidden">
       <button class="operand-elem"
         v-for="elem in operands" 
         v-bind:key="elem.id"
-        v-on:click="operand1.value = elem.name">
+        v-on:click="numberHandler(elem, checked)">
         {{ elem.name }}
       </button>
     </div>
+    
     <div class="operations">
       <button class="operation-elem"
         v-for="elem in operations" 
@@ -33,6 +38,7 @@
         {{ elem.name.toUpperCase() }}
       </button>
     </div>
+
   </div>
 </template>
 
@@ -44,8 +50,8 @@ export default {
   },
   data() {
      return {
+      checked: "operand1",
       isHidden: true,
-      test: false,
       error: false,
       result: 0,
       operand1: {
@@ -83,55 +89,61 @@ export default {
           name: 'modulo',
           id: '%'
         },
+        {
+          name: 'del',
+          id: '<-'
+        },
       ],
       operands: [
         {
-          name: 0,
-          id: 0,
+          name: "0",
+          id: "0",
         },
         {
-          name: 1,
-          id: 1,
+          name: "1",
+          id: "1",
         },
         {
-          name: 2,
-          id: 2,
+          name: "2",
+          id: "2",
         },
         {
-          name: 3,
-          id: 3,
+          name: "3",
+          id: "3",
         },
         {
-          name: 4,
-          id: 4,
+          name: "4",
+          id: "4",
         },
         {
-          name: 5,
-          id: 5,
+          name: "5",
+          id: "5",
         },
         {
-          name: 6,
-          id: 6,
+          name: "6",
+          id: "6",
         },
         {
-          name: 7,
-          id: 7,
+          name: "7",
+          id: "7",
         },
         {
-          name: 8,
-          id: 8,
+          name: "8",
+          id: "8",
         },
         {
-          name: 9,
-          id: 9,
+          name: "9",
+          id: "9",
         },
       ]
      }
   },
+  computed: {
+    errorHandler: function() {
+      return  this.error ? "ERROR" : this.result 
+    }
+  },
   methods: {
-    activeCheckbox(e) {
-      console.log(e)
-    },
     methodHandler(key) {
       this.error = false;
       switch (key) {
@@ -155,11 +167,33 @@ export default {
         case '%':
           this.result = this.operand1.value % this.operand2.value
           break;
+        case '<-':
+          if(this.checked === "operand1") {
+            this.operand1.value = parseInt(
+              this.operand1.value
+              .toString()
+              .substring(0, this.operand1.value.toString().length - 1)
+            ) 
+          } else {
+            this.operand2.value = parseInt(
+              this.operand2.value
+              .toString()
+              .substring(0, this.operand2.value.toString().length - 1)
+            )
+          }
+          break;
 
         default:
           break;
       }
     },
+    numberHandler(e, operand) {
+      if(operand === "operand1") {
+        this.operand1.value = parseInt(this.operand1.value += e.name)
+      } else {
+        this.operand2.value = parseInt(this.operand2.value += e.name)
+      }
+    }
   }
 }
 </script>
