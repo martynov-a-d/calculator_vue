@@ -157,9 +157,11 @@ export default {
           this.result = this.operand1.value * this.operand2.value
           break;
         case '/':
-          if(this.operand2.value !== 0) {
+          if (this.operand2.value !== 0) {
             this.result = this.operand1.value / this.operand2.value
-          } else {this.error = true}
+          } else {
+            this.error = true
+          }
           break;
         case '**':
           this.result = this.operand1.value ** this.operand2.value
@@ -168,18 +170,10 @@ export default {
           this.result = this.operand1.value % this.operand2.value
           break;
         case '<-':
-          if(this.checked === "operand1") {
-            this.operand1.value = parseInt(
-              this.operand1.value
-              .toString()
-              .substring(0, this.operand1.value.toString().length - 1)
-            ) 
+          if (this.checked === "operand1") {
+            this.deleteHandler(this.operand1)
           } else {
-            this.operand2.value = parseInt(
-              this.operand2.value
-              .toString()
-              .substring(0, this.operand2.value.toString().length - 1)
-            )
+            this.deleteHandler(this.operand2)
           }
           break;
 
@@ -188,10 +182,22 @@ export default {
       }
     },
     numberHandler(e, operand) {
-      if(operand === "operand1") {
+      if (operand === "operand1") {
         this.operand1.value = parseInt(this.operand1.value += e.name)
       } else {
         this.operand2.value = parseInt(this.operand2.value += e.name)
+      }
+    },
+    deleteHandler(e) {
+      if (e.value
+          .toString().length === 1) {
+        e.value = 0
+      } else {
+        e.value = parseInt(
+            e.value
+                .toString()
+                .substring(0, e.value.toString().length - 1)
+        )
       }
     }
   }
