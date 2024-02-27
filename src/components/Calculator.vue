@@ -1,7 +1,7 @@
 <template>
   <div class="calculator">
     <h1>{{ msg }}</h1>
-    <div>{{ checked === "operand1" ? "Введите первое число" : "Введите второе число число" }}</div>
+    <div>{{ checked === "operand1" ? "Введите первое число" : "Введите второе число" }}</div>
     
     <input type="radio" name="operands_choise" value="operand1" v-model="checked">
     <input type="radio" name="operands_choise" value="operand2" v-model="checked">
