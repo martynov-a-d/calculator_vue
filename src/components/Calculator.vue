@@ -1,16 +1,18 @@
 <template>
   <div class="calculator">
     <h1>{{ msg }}</h1>
-    <div>{{ checked == "operand1" ? "Введите первое число" : "Введите второе число число" }}</div>
+    <div>{{ checked === "operand1" ? "Введите первое число" : "Введите второе число число" }}</div>
     
     <input type="radio" name="operands_choise" value="operand1" v-model="checked">
     <input type="radio" name="operands_choise" value="operand2" v-model="checked">
     
     <input 
-      type="text" 
+      type="text"
+      name="operand1"
       v-model.number="operand1.value">
     <input 
-      type="text" 
+      type="text"
+      name="operand2"
       v-model.number="operand2.value">
     
     <h2 v-bind:class="{'error' : error}">{{ errorHandler }}</h2>
@@ -23,8 +25,8 @@
 
     <div class="operands" v-show="isHidden">
       <button class="operand-elem"
-        v-for="elem in operands" 
-        v-bind:key="elem.id"
+        v-for="elem in operands"
+        v-bind:key="elem.id" v-bind:name="elem.id"
         v-on:click="numberHandler(elem, checked)">
         {{ elem.name }}
       </button>
@@ -34,7 +36,8 @@
       <button class="operation-elem"
         v-for="elem in operations" 
         v-bind:key="elem.id" 
-        v-on:click="methodHandler(elem.id)">
+        v-on:click="methodHandler(elem.id)"
+        v-bind:name="elem.name">
         {{ elem.name.toUpperCase() }}
       </button>
     </div>
@@ -140,7 +143,7 @@ export default {
   },
   computed: {
     errorHandler: function() {
-      return  this.error ? "ERROR" : this.result 
+      return  this.error ? "ERROR" : this.result
     }
   },
   methods: {
